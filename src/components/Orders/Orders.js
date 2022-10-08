@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
-import { removeFromDb } from '../../utilities/fakedb';
+import { Link, useLoaderData } from 'react-router-dom';
+import { deleteShoppingCart, removeFromDb } from '../../utilities/fakedb';
 import Cart from '../Cart/Cart';
 import ReviewIteam from '../ReviewIteam/ReviewIteam';
 
 const Orders = () => {
-    const {products,initialCard} = useLoaderData();
+    const {initialCard} = useLoaderData();
     const [cart,setCart]=useState(initialCard);
+
+    const clearCart =()=>{
+        setCart([]);
+        deleteShoppingCart();
+    }
 
     const handleRemoveItem =(id)=>{
         const remainingItem = cart.filter(product=>id!==product.id);
@@ -23,9 +28,13 @@ const Orders = () => {
                         handleRemoveItem={handleRemoveItem}
                         ></ReviewIteam>)
                 }
+                {
+                  cart.length===0&&<h2>No item are not available for review <Link to="/">Shope More</Link></h2>
+                }
             </div>
             <div className='order-container'>
-                <Cart cart={cart}></Cart>
+                <Cart cart={cart}
+                clearCart={clearCart}></Cart>
             </div>
         </div>
     );
